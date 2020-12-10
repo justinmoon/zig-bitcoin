@@ -11,10 +11,10 @@ const FieldElement = struct {
     num: u32,
     prime: u32,
 
-    pub fn init(num: u32, prime: u32) FieldElement {
-        // if (num >= prime) {
-        //     return Error.BadArgs;
-        // }
+    pub fn init(num: u32, prime: u32) !FieldElement {
+        if (num >= prime) {
+            return Error.BadArgs;
+        }
         return FieldElement {
             .num = num,
             .prime = prime,
@@ -36,12 +36,12 @@ const FieldElement = struct {
 
 test "field elements" {
     // Constructor works
-    var fe = FieldElement.init(7, 13);
+    var fe = FieldElement.init(7, 13) catch unreachable;
     expect(fe.num == 7);
     expect(fe.prime == 13);
 
-    var fe2 = FieldElement.init(7, 13);
-    var fe3 = FieldElement.init(7, 19);
+    var fe2 = FieldElement.init(7, 13) catch unreachable;
+    var fe3 = FieldElement.init(7, 19) catch unreachable;
 
     expect(fe.eq(fe2));
     expect(fe2.eq(fe));
@@ -50,7 +50,7 @@ test "field elements" {
 
     // add
     const sum = fe.add(fe) catch unreachable;
-    expect(sum.eq(FieldElement.init(1, 13)));
+    expect(sum.eq(FieldElement.init(1, 13) catch unreachable));
 }
 
 
